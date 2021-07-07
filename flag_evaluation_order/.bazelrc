@@ -1,0 +1,4 @@
+build --//:flag=default
+build:linux --//:flag=linux --cpu=arm7
+common:linux --cpu=arm8
+build:womble --//:flag=womble --cpu=womble
