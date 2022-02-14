@@ -3,7 +3,7 @@
 #   bazel cquery :foo --output=starlark --starlark:expr='providers(target)'
 #   Where is DefaultInfo
 
-load(':show_rule.bzl', 'show_default_info')
+load(':show_rule.bzl', 'am_i_executable', 'show_default_info')
 
 cc_binary(
   name = 'foo',
@@ -15,3 +15,13 @@ show_default_info(
   src = ':foo'
 )
 
+am_i_executable(
+  name = 'is_foo_executable',
+  src = ':foo'
+)
+
+
+am_i_executable(
+  name = 'is_foo.cc_executable',
+  src = 'foo.cc'
+)
