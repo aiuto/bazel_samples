@@ -7,9 +7,8 @@ def wrapper_orig(name, deps = [], tools = [], server_spec = None):
     inner_name = "_inner" + name
     inner(
         name = inner_name,
-        deps = deps + ([
-            server_spec,
-        ] if server_spec else []),
+        deps = deps + ([server_spec] if server_spec else []),
+        # Why doesn't buildifier wrap the next line?
         tools = tools + ([
             "//server:spec_parser",
         ] if server_spec else []),
@@ -65,6 +64,7 @@ def wrapper_append(name, deps = [], tools = [], server_spec = None):
         tools = tools,
     )
 
+# This won't work
 def two_append(name, deps = [], tools = [], server_spec = None):
     wrapper_append(name + "_two", deps = deps, tools = tools, server_spec = server_spec)
     wrapper_append(name + "_two", deps = deps, tools = tools, server_spec = server_spec)
