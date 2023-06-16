@@ -2,8 +2,8 @@
  *
  */
 
+#include <cstring>
 #include <iostream>
-#include <string>
 #include <stdio.h>
 
 int try_open(const char* name, int expected_len) {
