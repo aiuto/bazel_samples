@@ -29,7 +29,7 @@ Background reading:
 - [Unicode on macos](https://gist.github.com/JamesChevalier/8448512)
 - [u with Diaeresis](https://www.compart.com/en/unicode/U+00FC)
 
-## Lesson 1. cp and tar have different semantics
+## Lesson 1. cp and tar have different behaviors
 
 Try this on a mac.
 
@@ -49,13 +49,18 @@ Only in u.cp: sübdir
 ```
 
 Dig further and we see that `u.cp` preserves the encoding syle, even
-though it is not in NFD form.  `cp` probably blindly reads the file name
-as raw bytes and creates the copies from the same buffer.  That would
-work because the file names must bin in NFD form if they are files on
-a mac. Right? :-)
+though it is not in NFD form. 
 
-Meanwhile `tar` on the mac knows it might see things in NFC form from
-other machines. It must do a conversion somewhere to NFD at some point.
+Hypothesis: `cp` blindly reads the file nameas raw bytes and creates
+the copies from the same buffer.  That would work because (putting
+myself in the place of a macos engineer) the file names must be in NFD
+form if they are files on a mac. Right? :-)
+
+Meanwhile, `tar` on the mac expects to see things in NFC form from
+other machines. It can't take a fast path.
+
+Hypotheisis: tar reads the UTF-8 string, Re-normalization to NFD
+happens somewhere between that and the creat() call.
 
 ```
 $ ls -d u.cp/s*r | od -c
@@ -110,11 +115,14 @@ $ tar cf - u.tar | od -c | grep 'b   d   i'
 0001020    s   u    ̈  **   b   d   i   r  \0  \0  \0  \0  \0  \0  \0  \0
 ...
 ```
-Bingo!
+Bingo! When `tar` sees an NFD name, it writes it to the archive in NFD format,
+regardless of the fact that people won't be able to read it.
 
 # Lesson 3 - What interoperates
 
-Run the `try_open` program on a mac. If it works, it means
+Run the `try_open` program on a mac. Read the source and see
+what we are doing.  It opens the same file paths with both NFC
+and NFD encodings of the path. If it works, it means
 we can pass a path with either normalization to a C++ program
 on macos and it will open a file of either encoding.
 
