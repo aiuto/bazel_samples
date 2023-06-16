@@ -42,20 +42,20 @@ mkdir u.tar
 
 diff -r u.cp u.tar
 ```
-and you get
+and you, perhaps surprisingly, get
 ```
 Only in u.tar: sübdir
 Only in u.cp: sübdir
 ```
 
-Dig further and we see that `u.cp` preserves the encoding syle,
-even though it is not in NFD form.  It probably blindly reads the
-file name as raw bytes and creates the copies from the same buffer.
-That will work because the file names must bin in NFD form if they
-are on a mac. Right? :-)
+Dig further and we see that `u.cp` preserves the encoding syle, even
+though it is not in NFD form.  `cp` probably blindly reads the file name
+as raw bytes and creates the copies from the same buffer.  That would
+work because the file names must bin in NFD form if they are files on
+a mac. Right? :-)
 
-Meanwhile tar knows it might see things in NFC form from other
-machines. It must do a conversion somewhere to NFD in the path.
+Meanwhile `tar` on the mac knows it might see things in NFC form from
+other machines. It must do a conversion somewhere to NFD at some point.
 
 ```
 $ ls -d u.cp/s*r | od -c
@@ -111,3 +111,16 @@ $ tar cf - u.tar | od -c | grep 'b   d   i'
 ...
 ```
 Bingo!
+
+# Lesson 3 - What interoperates
+
+TBD: Create a program that opens a file name in NFD encoding, while
+trying to open the file on a mac which is actually in NFC form.
+
+TBD: Various combinations on that theme
+
+Why: In a remote execution situation we might do analysis on a linux
+machine, but execute actions on a mac. The critical thing to know is if
+we can always send the file paths in NFC form, and the mac will still
+find the files. Or will we have to encode paths in actions in the style
+of the execution machine.
