@@ -114,8 +114,9 @@ Bingo!
 
 # Lesson 3 - What interoperates
 
-TBD: Create a program that opens a file name in NFD encoding, while
-trying to open the file on a mac which is actually in NFC form.
+Run the `try_open` program on a mac. If it works, it means
+we can pass a path with either normalization to a C++ program
+on macos and it will open a file of either encoding.
 
 TBD: Various combinations on that theme
 
