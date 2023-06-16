@@ -68,3 +68,9 @@ def wrapper_append(name, deps = [], tools = [], server_spec = None):
 def two_append(name, deps = [], tools = [], server_spec = None):
     wrapper_append(name + "_two", deps = deps, tools = tools, server_spec = server_spec)
     wrapper_append(name + "_two", deps = deps, tools = tools, server_spec = server_spec)
+
+format_sample = [
+    "aaaaaaaaaaaaaaaaaaaa",
+    "bbbbbbbbbbbbbbbbbbbb",
+    "cccccccccccccccccccc",
+] if True else []
